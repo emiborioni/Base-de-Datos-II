@@ -24,3 +24,12 @@ from payment,customer,address
 where payment.customer_id = customer.customer_id and payment.customer_id = address.address_id
 GROUP by payment.customer_id, customer.last_name, customer.first_name, address.address
 ORDER BY SUM(amount) DESC;
+
+
+-- Find all the film titles that are not in the inventory
+
+select title
+FROM film
+where film_id NOT IN  (select film_id 
+						 from inventory
+						 group by (film_id )order by film_id);

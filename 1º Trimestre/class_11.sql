@@ -47,3 +47,22 @@ AND title  NOT IN (SELECT DISTINCT film.title -- Muestra una vez el titulo y no 
 FROM film, inventory, rental
 WHERE film.film_id = inventory.film_id
 AND inventory.inventory_id = rental.inventory_id);
+
+-- Generate a report with:
+-- customer (first, last) name, store id, film title,
+-- when the film was rented and returned for each of these customers
+-- order by store_id, customer last_name
+
+select *
+from rental
+where return_date is NULL ;
+
+select customer.first_name, customer.last_name, store.store_id, film.title
+from rental, film,customer,store, staff, inventory
+where return_date is NULL 
+    and rental.customer_id = customer.customer_id
+    and store.store_id = staff.store_id
+    and staff.staff_id = rental.staff_id
+    and film.film_id = inventory.film_id
+    and inventory.inventory_id = rental.inventory_id
+order by store.store_id, customer.last_name;

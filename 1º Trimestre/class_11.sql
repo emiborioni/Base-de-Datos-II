@@ -33,3 +33,17 @@ FROM film
 where film_id NOT IN  (select film_id 
 						 from inventory
 						 group by (film_id )order by film_id);
+						 
+-- Find all the films that are in the inventory but were never rented. 
+-- Show title and inventory_id.
+-- hint: use sub-queries in FROM and in WHERE or use left join and ask if one of the fields is null						  
+select title, inventory_id
+FROM film, inventory
+where film.film_id = inventory.film_id
+AND film.film_id IN  (select film_id 
+						 from inventory
+						 group by (film_id )order by film_id)
+AND title  NOT IN (SELECT DISTINCT film.title -- Muestra una vez el titulo y no cada vez que este en cada tabla como uno distinto y diferente 
+FROM film, inventory, rental
+WHERE film.film_id = inventory.film_id
+AND inventory.inventory_id = rental.inventory_id);

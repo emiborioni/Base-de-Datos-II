@@ -21,7 +21,7 @@ SELECT country.country_id,country.country, COUNT(*)
 
 SELECT payment.customer_id, SUM(amount),customer.last_name, customer.first_name, address.address-- , address.address, customer.last_name-- , SUM(amount), rental_id
 from payment,customer,address
-where payment.customer_id = customer.customer_id and payment.customer_id = address.address_id
+where payment.customer_id = customer.customer_id and  customer.address_id = address.address_id
 GROUP by payment.customer_id, customer.last_name, customer.first_name, address.address
 ORDER BY SUM(amount) DESC;
 

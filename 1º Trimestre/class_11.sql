@@ -19,10 +19,10 @@ SELECT country.country_id,country.country, COUNT(*)
 -- Generate a report with customer (first, last) name, address, total films rented and the total money spent renting films. 
 -- Show the ones who spent more money first .
 
-SELECT payment.customer_id, SUM(amount),customer.last_name, customer.first_name, address.address-- , address.address, customer.last_name-- , SUM(amount), rental_id
-from payment,customer,address
-where payment.customer_id = customer.customer_id and  customer.address_id = address.address_id
-GROUP by payment.customer_id, customer.last_name, customer.first_name, address.address
+SELECT payment.customer_id, SUM(amount),customer.last_name, customer.first_name, address.address, COUNT(rental.rental_id)-- , address.address, customer.last_name-- , SUM(amount), rental_id
+from payment,customer,address, rental
+where payment.customer_id = customer.customer_id and customer.address_id = address.address_id and customer.customer_id = rental.customer_id
+GROUP by payment.customer_id, customer.last_name, customer.first_name, address.address, rental.customer_id
 ORDER BY SUM(amount) DESC;
 
 

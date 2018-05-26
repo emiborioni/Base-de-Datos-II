@@ -85,3 +85,13 @@ select film.rating, SUM(payment.amount)
 from film, inventory, rental, payment
 where film.film_id = inventory.film_id and inventory.inventory_id = rental.inventory_id and rental.rental_id = payment.rental_id
 group by film.rating;
+
+-- Which actor has appeared in the most films
+
+select actor.actor_id,actor.first_name, actor.last_name, COUNT(actor.actor_id)
+from film_actor, actor
+where actor.actor_id = film_actor.actor_id
+group by actor.actor_id
+order by count(actor.actor_id) desc 
+limit 1;
+

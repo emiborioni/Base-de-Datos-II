@@ -66,3 +66,15 @@ where return_date is NULL
     and film.film_id = inventory.film_id
     and inventory.inventory_id = rental.inventory_id
 order by store.store_id, customer.last_name;
+
+-- Show sales per store 
+-- show store citi, country, manager info and total sales
+-- (optional) Use concat to show city and country and manager first and last name
+
+select CONCAT(staff.first_name,'',staff.last_name) as manager , CONCAT(city.city,'',country.country) as store , SUM(payment.amount) as total
+FROM store, city, country, staff, address, payment, rental, inventory
+where payment.rental_id = rental.rental_id and rental.inventory_id  = inventory.inventory_id and inventory.store_id = store.store_id
+and store.address_id = address.address_id and address.city_id = city.city_id and city.country_id = country.country_id
+and store.manager_staff_id = staff.staff_id
+group by staff.first_name, staff.last_name, city.city, country.country
+order by country.country, city.city;

@@ -78,3 +78,10 @@ and store.address_id = address.address_id and address.city_id = city.city_id and
 and store.manager_staff_id = staff.staff_id
 group by staff.first_name, staff.last_name, city.city, country.country
 order by country.country, city.city;
+
+-- Show sales per film rating
+
+select film.rating, SUM(payment.amount)
+from film, inventory, rental, payment
+where film.film_id = inventory.film_id and inventory.inventory_id = rental.inventory_id and rental.rental_id = payment.rental_id
+group by film.rating;

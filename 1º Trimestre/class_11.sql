@@ -95,3 +95,12 @@ group by actor.actor_id
 order by count(actor.actor_id) desc 
 limit 1;
 
+-- Which film categories have the larger film duration (comparing average)?
+-- Order by average in descending order
+
+select category.name, avg(`length`)
+from film, category, film_category
+where film.film_id = film_category.film_id and film_category.category_id = category.category_id
+group by category.name
+order by AVG(`length`) DESC;
+

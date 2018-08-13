@@ -49,3 +49,11 @@ CREATE OR REPLACE VIEW list_of_customer AS
  ; 
  
  select * from actor_information; 
+
+#5
+#Analyze view actor_info, explain the entire query and specially how the sub query works. Be very specific, take some time and decompose each part and give an explanation for each. 
+
+# La view actor_info se utiliza para que cada vez que necesitemos saber cuantas veces participo en peliculas un actor tengamos que escribir toda la query entera.
+# Lo que realiza la query es extraer de la tabla actor los siguientes parametros (actor_id, first_name, last_name)y de la tabla film_actor, se coloca un contador del campo actor_id cuando el id 
+# coincida con el de la tabla actor en el campo actor_id, pero como se encuentra en una tabla distinta necesitamos realizar un inner join que nos vincule dichas tablas, 
+# luego de esto para que ordene en cuantas peliculas actuo cada uno realizamos un group by el cual agrupara todos los resultados que tengan el mismo campo actor_id. 

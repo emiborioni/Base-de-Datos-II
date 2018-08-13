@@ -22,3 +22,16 @@ CREATE OR REPLACE VIEW list_of_customer AS
  group by film_id, title, description,`length`, rating, category.name,replacement_cost
  
  select * from film_details ;
+
+ #Create view sales_by_film_category, it should return 'category' and 'total_rental' columns. SUM(payment.amount)
+ CREATE OR REPLACE VIEW sales_by_film_category AS
+ select name, SUM(payment.amount)
+ from category
+ INNER JOIN film_category USING(category_id)
+ INNER JOIN film USING(film_id)
+ INNER JOIN inventory USING(film_id)
+ INNER JOIN rental USING(inventory_id)
+ INNER JOIN payment USING(rental_id)
+ group by name
+ 
+ select * from sales_by_film_category ; 

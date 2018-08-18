@@ -46,4 +46,5 @@ END AS returned
 FROM rental
 INNER JOIN inventoryz USING (inventory_id)
 INNER JOIN film USING (film_id)
-INNER JOIN customer USING (customer_id);
+INNER JOIN customer USING (customer_id)
+where MONTH(return_date) in ('5','6');

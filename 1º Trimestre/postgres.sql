@@ -5,18 +5,20 @@ group by factinternetsales.customerkey,dimcustomer.firstname,dimcustomer.lastnam
 order by customerkey;
 
 -- View Internet Sales amount detail between year 2005 to 2008
-select factinternetsales.customerkey,sum(salesamount) from factinternetsales
-inner join using (customerkey)
-where orderdatekey > 20050101 and orderdatekey < 200712301
-group by factinternetsales.customerkey
-order by factinternetsales.customerkey;
+select factinternetsales.customerkey,sum(salesamount),dimdate.calendaryear from factinternetsales
+inner join dimdate on factinternetsales.duedatekey = dimdate.datekey
+where(dimdate.calendaryear >= 2005 and dimdate.calendaryear <= 2008)
+group by dimdate.calendaryear,factinternetsales.customerkey
+order by 3,1;
 
 --View Internet Sales by product category and sub-category
-select dimproduct.englishproductname as "producto", dimproduct.productsubcategorykey as "Sub-Categoria",sum(salesamount) as "Total"
+select dimproductcategory.englishproductcategoryname as "Categoria",  dimproductsubcategory.englishproductsubcategoryname as "Sub-Categoria", dimproduct.englishproductname as "Producto",sum(salesamount) as "Total"
 from factinternetsales
 inner join dimproduct using (productkey)
-group by dimproduct.englishproductname, dimproduct.productsubcategorykey
-order by sum(salesamount),dimproduct.productsubcategorykey,dimproduct.englishproductname ASC;
+inner join dimproductsubcategory using(productsubcategorykey)
+inner join dimproductcategory using(productcategorykey)
+group by cube(1),cube(2),dimproduct.englishproductname
+order by sum(salesamount),dimproductsubcategory.englishproductsubcategoryname,dimproduct.englishproductname ASC;
 
 --View Internet Sales and Freight Cost by product category, sub-category and product
 select  dimproduct.englishproductname as "Producto", count(salesordernumber) as "Cantidad de Ventas", SUM(freight) as "Precio de Envio",dimproduct.productsubcategorykey as "Sub - Categoria"
@@ -42,14 +44,17 @@ group by dimsalesterritory.salesterritorycountry
 order by dimsalesterritory.salesterritorycountry;
 
 -- Retrieve all the products in descending order of their Internet sales amount of year 2007 
-select dimproduct.englishproductname, dimdate.calendaryear
+select dimproduct.englishproductname, dimdate.calendaryear, sum(salesamount)
 from factinternetsales
 inner join dimproduct using (productkey)
-inner join dimdate using (dimdate)
-group by 1,2;
+inner join dimdate on factinternetsales.duedatekey = dimdate.datekey
+where (dimdate.calendaryear =2007)
+group by dimproduct.englishproductname,dimdate.calendaryear
+order by sum(salesamount)desc;
 
 -- Generate a report with Internet Sales sub total, grand total per year and month.
-select sum(salesamount)
+select dimdate.calendaryear,dimdate.monthnumberofyear, sum(salesamount)
 from factinternetsales
-inner join dimdate using (duedatekey)
-group by dimdate.calendaryear, cube(dimdate.monthnumberofyear);
+inner join dimdate on factinternetsales.duedatekey = dimdate.datekey
+group by dimdate.calendaryear, cube(dimdate.monthnumberofyear)
+order by dimdate.calendaryear,dimdate.monthnumberofyear;
